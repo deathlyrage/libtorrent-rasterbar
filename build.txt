@@ -1,0 +1,21 @@
+- Download Boost
+<https://www.boost.org/users/history/version_1_55_0.html>
+
+First Step: Building Boost
+cd /D "C:\boost_1_55_0\tools\build\v2"
+bootstrap.bat or bootstrap.sh
+(if using windows, launch from x64 native tools command prompt)
+
+.\b2 --prefix=DIR install
+
+this will build b2, copy b2 to path from 
+src/engine/bin
+
+set BOOST_BUILD_PATH=C:\boost_1_55_0\tools\build\v2
+set BOOST_ROOT="C:\boost_1_55_0"
+
+go to libtorrent sub directory and run
+b2 msvc-14.2
+
+b2 install --prefix=/usr/local
+
