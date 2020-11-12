@@ -155,7 +155,7 @@ NAN_METHOD(Session::AddExtension) {
   }
 
   if (ARGUMENTS_IS_INSTANCE(0, Plugin)) {
-    Plugin* ps = Nan::ObjectWrap::Unwrap<Plugin>(info[0]->ToObject());
+    Plugin* ps = Nan::ObjectWrap::Unwrap<Plugin>(Nan::To<v8::Object>(info[0]).ToLocalChecked());
     obj->session->add_extension(ps->Value());
     return;
   }

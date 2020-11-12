@@ -12,7 +12,7 @@
     if (!info[i]->IsObject()) {                                               \
       return Nan::ThrowTypeError("Argument " #i " must be a Object");         \
     }                                                                         \
-    var = info[i]->ToObject();                                                \
+    var = Nan::To<v8::Object>(info[i]).ToLocalChecked();                                                \
   } else {                                                                    \
     var = (defaultValue);                                                     \
   }
@@ -24,7 +24,7 @@
   if (!ARGUMENTS_IS_NUMBER(i)) {                                              \
     return Nan::ThrowTypeError("Argument " #i " must be a Number");           \
   }                                                                           \
-  int64_t var = info[i]->IntegerValue();
+  int64_t var = info[i]->Int32Value(Nan::GetCurrentContext()).FromJust();
 
 #define ARGUMENTS_IS_BOOLEAN(i)                                               \
   (info.Length() > (i) && info[i]->IsBoolean())
@@ -33,7 +33,7 @@
   if (!ARGUMENTS_IS_BOOLEAN(i)) {                                             \
     return Nan::ThrowTypeError("Argument " #i " must be a Boolean");          \
   }                                                                           \
-  bool var = info[i]->BooleanValue();
+  bool var = Nan::To<v8::Boolean>(info[i]).ToLocalChecked()->Value();
 
 #define ARGUMENTS_IS_STRING(i)                                                \
   (info.Length() > (i) && info[i]->IsString())
@@ -63,7 +63,7 @@
   if (!ARGUMENTS_IS_INSTANCE(i, cls)) {                                       \
     return Nan::ThrowTypeError("Argument " #i " must be a " #cls);            \
   }                                                                           \
-  cls* var = Nan::ObjectWrap::Unwrap<cls>(info[i]->ToObject());
+  cls* var = Nan::ObjectWrap::Unwrap<cls>(Nan::To<v8::Object>(info[i]).ToLocalChecked());
 
 #define ARGUMENTS_IS_BUFFER(i)                                                \
   (info.Length() >= (i) && node::Buffer::HasInstance(info[i]))

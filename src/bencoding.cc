@@ -22,12 +22,12 @@ int ValueToEntry(v8::Local<v8::Value> value, libtorrent::entry& entry) {
   Nan::HandleScope scope;
 
   if (value->IsNumber()) {
-    entry = (libtorrent::entry::integer_type) value->IntegerValue();
+    entry = (libtorrent::entry::integer_type) value->Int32Value(Nan::GetCurrentContext()).FromJust();
   } else if (value->IsString()) {
     entry = std::string(*Nan::Utf8String(value));
   } else if (value->IsArray()) {
     libtorrent::entry::list_type list;
-    v8::Local<v8::Object> obj = value->ToObject();
+    v8::Local<v8::Object> obj = Nan::To<v8::Object>(value).ToLocalChecked();
     for (uint32_t i = 0, length = v8::Local<v8::Array>::Cast(value)->Length(); i < length; ++i) {
       v8::Local<v8::Value> objValue = Nan::Get(obj, i).ToLocalChecked();
       libtorrent::entry item;
@@ -40,7 +40,7 @@ int ValueToEntry(v8::Local<v8::Value> value, libtorrent::entry& entry) {
       entry = std::string(node::Buffer::Data(value), node::Buffer::Length(value));
     } else {
       libtorrent::entry::dictionary_type dict;
-      v8::Local<v8::Object> obj = value->ToObject();
+      v8::Local<v8::Object> obj = Nan::To<v8::Object>(value).ToLocalChecked();
       v8::Local<v8::Array> keys = Nan::GetOwnPropertyNames(obj).ToLocalChecked();
       for (uint32_t i = 0, length = keys->Length(); i < length; ++i) {
         v8::Local<v8::Value> key = Nan::Get(keys, i).ToLocalChecked();
